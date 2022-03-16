@@ -7,8 +7,6 @@
 import csv
 import xml.etree.ElementTree as ET
 from xml.etree.ElementTree import parse
-import pandas as pd
-import matplotlib.pyplot as plt
 
 def get_columns(input_path):
 
@@ -41,7 +39,7 @@ def get_columns(input_path):
                         for impulse_dict_key in impulse_value.keys():
                             impulse_dict_keys.append(impulse_dict_key.strip())
                     
-                    column_candidates =  ["patient_name", "patient_id", "patient_uid"] + meta_dict_keys + impulse_dict_keys
+                    column_candidates = meta_dict_keys + impulse_dict_keys
                     columns.append(column_candidates)
                 
                 
@@ -54,6 +52,9 @@ def get_columns(input_path):
                 key = tokens[0].strip()
                 value = tokens[1].strip()
                 
+                meta_dict['Patient Name'] = patient_name
+                meta_dict['Patient ID'] = patient_id
+                meta_dict['Patient UID'] = patient_uid
                 meta_dict[key] = value
                 
                 
@@ -152,11 +153,8 @@ if __name__ == '__main__':
                 tokens = line.split(',')
                 
                 if 'Patient Name:' in line:
-                    key = tokens[0].strip()
-                    value = ' '.join(tokens[1:]).strip()
-                    
-                    patient_name = value
-                    
+                    patient_name = ' '.join(tokens[1:]).strip()
+                                        
                     
                 elif 'Test Date' in line:
                     if len(meta_dict) != 0:
@@ -188,6 +186,9 @@ if __name__ == '__main__':
                     key = tokens[0].strip()
                     value = tokens[1].strip()
                     
+                    meta_dict['Patient Name'] = patient_name
+                    meta_dict['Patient ID'] = patient_id
+                    meta_dict['Patient UID'] = patient_uid
                     meta_dict[key] = value
                     
                     
@@ -211,10 +212,6 @@ if __name__ == '__main__':
                                         tw.writerow(impulse_value_value)
                         
                         ### print
-                        print(patient_name, end="\t")
-                        print(patient_id, end="\t")
-                        print(patient_uid, end="\t")
-                        
                         for col in columns:
                             if col in meta_dict:
                                 print(meta_dict[col], end="\t")
