@@ -20,8 +20,6 @@ def get_columns(input_path):
     meta_dict = {}
     impulse_dict = {}
     
-    impulse_key = ''
-    
     columns = []
     
     with open(input_path, 'r', encoding='UTF-8') as fin:
@@ -45,7 +43,7 @@ def get_columns(input_path):
                     
                     column_candidates = meta_dict_keys + ['Trial Number'] + impulse_dict_keys
                     columns.append(column_candidates)
-                
+                    
                 
                 is_catch_up_saccade_analysis = False
                 is_impulse = False
@@ -84,17 +82,17 @@ def get_columns(input_path):
             else:
                 if 'Catch-up Saccade Analysis' in line:
                     is_catch_up_saccade_analysis = True
-
-
+                    
+                    
                 if len(tokens) == 1:
                     continue
-                
-                
+                    
+                    
                 if is_catch_up_saccade_analysis:
                     if tokens[1] and tokens[2]:
                         key = tokens[1].strip() + ' ' + tokens[2].strip()
                         s_group = tokens[1].strip()
-                    
+                        
                     elif tokens[2]:
                         key = s_group + ' ' + tokens[2].strip()
                         
@@ -111,10 +109,15 @@ def get_columns(input_path):
                         
                     else:
                         meta_dict[key] = value
-                    
+                        
                 elif is_impulse:
                     key = tokens[1].strip()
-                    value = tokens[2:]
+                    
+                    if len(tokens) == 3:
+                        value = tokens[2].strip()
+                        
+                    else:
+                        value = tokens[2:]
                     
                     impulse_dict[impulse_key][key] = value
                     
@@ -144,6 +147,7 @@ if __name__ == '__main__':
     all_dict = {}
     all_dict_list = []
     
+    s_group = ''
     impulse_key = ''
     impulse_num = 1
     
@@ -267,7 +271,12 @@ if __name__ == '__main__':
                     
                 elif is_impulse:
                     key = tokens[1].strip()
-                    value = tokens[2:]
+                    
+                    if len(tokens) == 3:
+                        value = tokens[2].strip()
+                        
+                    else:
+                        value = tokens[2:]
                     
                     impulse_dict[impulse_key][key] = value
                      
