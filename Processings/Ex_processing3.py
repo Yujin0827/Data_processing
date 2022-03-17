@@ -80,7 +80,7 @@ def get_columns(input_path):
                 
                 if is_catch_up_saccade_analysis:
                     if tokens[1] and tokens[2]:
-                        key = ' '.join(tokens[:3])
+                        key = tokens[1].strip() + ' ' + tokens[2].strip()
                         s_group = tokens[1].strip()
                     
                     elif tokens[2]:
@@ -97,7 +97,12 @@ def get_columns(input_path):
                     
                 elif is_impulse:
                     key = tokens[1].strip()
-                    value = tokens[2:]
+                    
+                    if len(tokens) == 3:
+                        value = tokens[2].strip()
+                        
+                    else:
+                        value = tokens[2:]
                     
                     impulse_dict[impulse_key][key] = value
                     
@@ -221,17 +226,17 @@ if __name__ == '__main__':
                     
                 if len(tokens) == 1:
                     continue
-                
+                    
                 if is_catch_up_saccade_analysis:
                     if tokens[1] and tokens[2]:
-                        key = ' '.join(tokens[:3])
+                        key = tokens[1].strip() + ' ' + tokens[2].strip()
                         s_group = tokens[1].strip()
-                    
+                        
                     elif tokens[2]:
                         key = s_group + ' ' + tokens[2].strip()
                         
                     else:
-                        tokens[0].strip() + tokens[1].strip()
+                        key = tokens[0].strip() + tokens[1].strip()
                         
                     value_left = tokens[-2].strip()
                     value_right = tokens[-1].strip()
@@ -241,7 +246,12 @@ if __name__ == '__main__':
                     
                 elif is_impulse:
                     key = tokens[1].strip()
-                    value = tokens[2:]
+                    
+                    if len(tokens) == 3:
+                        value = tokens[2].strip()
+                        
+                    else:
+                        value = tokens[2:]
                     
                     impulse_dict[impulse_key][key] = value
                      
@@ -251,7 +261,7 @@ if __name__ == '__main__':
                     
                     meta_dict[key] = value
                     
-         
+                    
     with open('D:/vhit/ahn ,hyo joon_200555967/Result_Ex_processing3.tsv', 'w', encoding='UTF-8', newline='') as f:
         writer = csv.DictWriter(f, fieldnames=columns, delimiter='\t')
         writer.writeheader()
