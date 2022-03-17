@@ -125,7 +125,12 @@ if __name__ == '__main__':
                     
                 elif is_impulse:
                     key = tokens[1].strip()
-                    value = tokens[2:]
+                    
+                    if len(tokens) == 3:
+                        value = tokens[2].strip()
+                        
+                    else:
+                        value = tokens[2:]
                     
                     impulse_dict[impulse_key][key] = value
                     
