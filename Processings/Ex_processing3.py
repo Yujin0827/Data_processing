@@ -16,9 +16,7 @@ def get_columns(input_path):
     
     meta_dict = {}
     impulse_dict = {}
-    
-    impulse_key = ''
-    
+        
     columns = []
     
     with open(input_path, 'r', encoding='UTF-8') as fin:
@@ -81,8 +79,12 @@ def get_columns(input_path):
                     continue
                 
                 if is_catch_up_saccade_analysis:
-                    if len(tokens) == 5:
+                    if tokens[1] and tokens[2]:
                         key = ' '.join(tokens[:3])
+                        s_group = tokens[1].strip()
+                    
+                    elif tokens[2]:
+                        key = s_group + ' ' + tokens[2].strip()
                         
                     else:
                         key = tokens[0].strip() + tokens[1].strip()
@@ -126,6 +128,7 @@ if __name__ == '__main__':
     all_dict_list = []
     
     impulse_key = ''
+    s_group = ''
     
     xml_doc = ET.parse(xml_path)
     root = xml_doc.getroot()
@@ -220,11 +223,15 @@ if __name__ == '__main__':
                     continue
                 
                 if is_catch_up_saccade_analysis:
-                    if len(tokens) == 5:
-                        key = ' '.join(tokens[:3]).strip()
-                          
+                    if tokens[1] and tokens[2]:
+                        key = ' '.join(tokens[:3])
+                        s_group = tokens[1].strip()
+                    
+                    elif tokens[2]:
+                        key = s_group + ' ' + tokens[2].strip()
+                        
                     else:
-                        key = tokens[0].strip() + tokens[1].strip()
+                        tokens[0].strip() + tokens[1].strip()
                         
                     value_left = tokens[-2].strip()
                     value_right = tokens[-1].strip()
@@ -250,3 +257,4 @@ if __name__ == '__main__':
         writer.writeheader()
         
         writer.writerows(all_dict_list)
+        
