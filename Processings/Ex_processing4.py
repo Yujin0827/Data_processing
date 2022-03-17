@@ -90,8 +90,12 @@ def get_columns(input_path):
                 
                 
                 if is_catch_up_saccade_analysis:
-                    if len(tokens) == 5:
-                        key = ' '.join(tokens[:3])
+                    if tokens[1] and tokens[2]:
+                        key = tokens[1].strip() + ' ' + tokens[2].strip()
+                        s_group = tokens[1].strip()
+                    
+                    elif tokens[2]:
+                        key = s_group + ' ' + tokens[2].strip()
                         
                     else:
                         key = tokens[0].strip() + tokens[1].strip()
@@ -239,9 +243,13 @@ if __name__ == '__main__':
                     continue
                 
                 if is_catch_up_saccade_analysis:
-                    if len(tokens) == 5:
-                        key = ' '.join(tokens[:3]).strip()
-                          
+                    if tokens[1] and tokens[2]:
+                        key = tokens[1].strip() + ' ' + tokens[2].strip()
+                        s_group = tokens[1].strip()
+                    
+                    elif tokens[2]:
+                        key = s_group + ' ' + tokens[2].strip()
+                        
                     else:
                         key = tokens[0].strip() + tokens[1].strip()
                         
