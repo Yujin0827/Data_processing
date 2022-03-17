@@ -69,7 +69,7 @@ if __name__ == '__main__':
                     
                 if len(tokens) == 1:
                     continue
-                
+                    
                 elif len(tokens) == 2:
                     key = tokens[0].strip()
                     value = tokens[1].strip()
