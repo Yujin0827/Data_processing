@@ -100,23 +100,23 @@ if __name__ == '__main__':
             else:
                 if 'Catch-up Saccade Analysis' in line:
                     is_catch_up_saccade_analysis = True
-
-
+                    
+                    
                 if len(tokens) == 1:
                     continue
-                
-                
+                    
+                    
                 if is_catch_up_saccade_analysis:
                     if tokens[1] and tokens[2]:
                         key = ' '.join(tokens[:3])
                         s_group = tokens[1].strip()
-                    
+                        
                     elif tokens[2]:
                         key = s_group + ' ' + tokens[2].strip()
                         
                     else:
                         key = tokens[0].strip() + tokens[1].strip()
-        
+                        
                     value_left = tokens[-2].strip()
                     value_right = tokens[-1].strip()
                     value = (value_left, value_right)
@@ -134,20 +134,20 @@ if __name__ == '__main__':
                     value = tokens[1].strip()
                     
                     meta_dict[key] = value
-                
-                
+                    
+                    
         print()
         for key, value in meta_dict.items():
             print(key, value)
-        
+            
         for impulse_key, impulse_value in impulse_dict.items():
             print()
             print(impulse_key)
-        
+            
             for key, value in meta_dict.items():
                 print(key, value)
-        
+                
             print()        
             for key, value in impulse_value.items():
                 print(key, value)
-        
+                
