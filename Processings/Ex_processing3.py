@@ -74,10 +74,12 @@ def get_columns(input_path):
             else:
                 if 'Catch-up Saccade Analysis' in line:
                     is_catch_up_saccade_analysis = True
-
+                    
+                    
                 if len(tokens) == 1:
                     continue
-                
+                    
+                    
                 if is_catch_up_saccade_analysis:
                     if tokens[1] and tokens[2]:
                         key = tokens[1].strip() + ' ' + tokens[2].strip()
@@ -135,6 +137,7 @@ if __name__ == '__main__':
     impulse_key = ''
     s_group = ''
     
+    
     xml_doc = ET.parse(xml_path)
     root = xml_doc.getroot()
     
@@ -144,7 +147,7 @@ if __name__ == '__main__':
     patient_name = ""
     
     columns = get_columns(input_path)
-    print("\t".join(columns))
+    
     
     with open(input_path, 'r', encoding='UTF-8') as fin:
         for line in fin:
@@ -158,15 +161,12 @@ if __name__ == '__main__':
                 if len(meta_dict) != 0:
                     for col in columns:
                         if col in meta_dict:
-                            print(meta_dict[col], end="\t")
                             all_dict[col] = meta_dict[col]
                         
                         for impulse_key, impulse_value in impulse_dict.items():
                             for impulse_value_key, impulse_value_value in impulse_value.items():
                                 if col in impulse_value_key:
-                                    print(impulse_value_value, end="\t")
                                     all_dict[col] = impulse_value_value
-                    print()
                     all_dict_list.append(all_dict)
                 
                 is_catch_up_saccade_analysis = False
@@ -192,19 +192,14 @@ if __name__ == '__main__':
             
             elif 'Impulse' in line:
                 if len(impulse_dict.keys()) != 0:
-                    ### print
                     for col in columns:
                         if col in meta_dict:
-                            print(meta_dict[col], end="\t")
                             all_dict[col] = meta_dict[col]
                             
                         for impulse_key, impulse_value in impulse_dict.items():
                             for impulse_value_key, impulse_value_value in impulse_value.items():
                                 if col in impulse_value_key:
-                                    print(impulse_value_value, end="\t")
                                     all_dict[col] = impulse_value_value
-                        
-                    print()
                     all_dict_list.append(all_dict)
                 
                 impulse_dict = {}
