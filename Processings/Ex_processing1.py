@@ -107,8 +107,12 @@ if __name__ == '__main__':
                 
                 
                 if is_catch_up_saccade_analysis:
-                    if len(tokens) == 5:
+                    if tokens[1] and tokens[2]:
                         key = ' '.join(tokens[:3])
+                        s_group = tokens[1].strip()
+                    
+                    elif tokens[2]:
+                        key = s_group + ' ' + tokens[2].strip()
                         
                     else:
                         key = tokens[0].strip() + tokens[1].strip()
@@ -118,7 +122,7 @@ if __name__ == '__main__':
                     value = (value_left, value_right)
                     
                     meta_dict[key] = value
-
+                    
                 elif is_impulse:
                     key = tokens[1].strip()
                     value = tokens[2:]
