@@ -41,7 +41,7 @@ def get_columns(input_path):
                         for impulse_dict_key in impulse_value.keys():
                             impulse_dict_keys.append(impulse_dict_key.strip())
                     
-                    column_candidates = meta_dict_keys + ['Trial Number'] + impulse_dict_keys
+                    column_candidates = meta_dict_keys + ['Trial Number'] + impulse_dict_keys + ['Saccade 1'] + ['Saccade 2'] + ['Saccade 3']
                     columns.append(column_candidates)
                     
                 
