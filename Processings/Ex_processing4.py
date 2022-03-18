@@ -206,7 +206,7 @@ if __name__ == '__main__':
                 value = tokens[1].strip()
                 
                 meta_dict[key] = value
-            
+                
             elif 'Impulse' in line:
                 if len(impulse_dict.keys()) != 0:
                     for col in columns:
@@ -225,7 +225,7 @@ if __name__ == '__main__':
                 
                 impulse_dict = {}
                 all_dict = {}
-                        
+                
                 is_impulse = True
                 is_catch_up_saccade_analysis = False
                         
@@ -286,9 +286,10 @@ if __name__ == '__main__':
                     
                     meta_dict[key] = value
                     
-         
+                    
     with open('D:/vhit/ahn ,hyo joon_200555967/Result_Ex_processing4.tsv', 'w', encoding='UTF-8', newline='') as f:
         writer = csv.DictWriter(f, fieldnames=columns, delimiter='\t')
         writer.writeheader()
         
         writer.writerows(all_dict_list)
+        
