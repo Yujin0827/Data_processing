@@ -22,10 +22,13 @@ def get_columns(input_path):
     impulse_dict = {}
 
     columns = []
-
+    col_max = 0
+    
+    print(input_path)
+    
     with open(input_path, 'r', encoding='UTF-8') as fin:
         for line in fin:
-
+            print(line)
             tokens = line.split(',')
 
             if 'Patient Name:' in line:
@@ -33,19 +36,6 @@ def get_columns(input_path):
                 
                 
             elif 'Test Date' in line:
-                if len(meta_dict.keys()) != 0:
-                    meta_dict_keys = [meta_key.strip() for meta_key in meta_dict.keys()]
-                    meta_dict_keys.remove('')
-
-                    for impulse_key, impulse_value in impulse_dict.items():
-                        impulse_dict_keys = []
-                        for impulse_dict_key in impulse_value.keys():
-                            impulse_dict_keys.append(impulse_dict_key.strip())
-
-                    column_candidates = meta_dict_keys + ['Trial Number'] + impulse_dict_keys + ['Saccade 1'] + ['Saccade 2'] + ['Saccade 3']
-                    columns.append(column_candidates)
-
-
                 is_catch_up_saccade_analysis = False
                 is_impulse = False
 
@@ -69,6 +59,22 @@ def get_columns(input_path):
 
 
             elif 'Impulse' in line:
+                if len(impulse_dict.keys()) != 0:
+                    meta_dict_keys = [meta_key.strip() for meta_key in meta_dict.keys()]
+                    meta_dict_keys.remove('')
+                    
+                    for impulse_key, impulse_value in impulse_dict.items():
+                        impulse_dict_keys = []
+                        for impulse_dict_key in impulse_value.keys():
+                            impulse_dict_keys.append(impulse_dict_key.strip())
+                    
+                    column_candidates = meta_dict_keys + ['Trial Number'] + impulse_dict_keys
+                    
+                    if len(column_candidates) > col_max:
+                        columns = []
+                        columns.append(column_candidates)
+                        col_max = len(column_candidates)
+                        
                 is_impulse = True
                 is_catch_up_saccade_analysis = False
 
@@ -144,6 +150,10 @@ if __name__ == '__main__':
                 xml_path = os.path.join(path, file).replace('\\', '/')
                 input_path = xml_path.strip('.xml') + '.csv'
                 result_path = path.replace('vHIT', 'vHIT_Result') + '/' + file.strip('.xml') + '.tsv'
+                result_dir = os.path.dirname(result_path)
+                
+                if not os.path.exists(result_dir):
+                    os.makedirs(result_dir)
                 
                 print(xml_path)
                 print(result_path)

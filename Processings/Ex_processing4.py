@@ -14,7 +14,7 @@ from xml.etree.ElementTree import parse
 import pandas as pd
 
 def get_columns(input_path):
-
+    
     is_catch_up_saccade_analysis = False
     is_impulse = False
     
@@ -125,6 +125,21 @@ def get_columns(input_path):
                         value = tokens[2:]
                     
                     impulse_dict[impulse_key][key] = value
+                    
+                    if 'Gain' in line:
+                        if meta_dict['Test Type'] == 'Head Impulse Lateral':
+                            if float(value) >= 0.8 and float(value) <= 1.2:
+                                impulse_dict[impulse_key]['Gain Test'] = 'Normal'
+                                
+                            else:
+                                impulse_dict[impulse_key]['Gain Test'] = 'Abnormal'
+                                
+                        else:
+                            if float(value) >= 0.75 and float(value) <= 1.2:
+                                impulse_dict[impulse_key]['Gain Test'] = 'Normal'
+                                
+                            else:
+                                impulse_dict[impulse_key]['Gain Test'] = 'Abnormal'
                     
                 else:
                     key = tokens[0].strip()
@@ -291,10 +306,9 @@ if __name__ == '__main__':
                         
                     else:
                         value = tokens[2:]
-                    
+                        
                     impulse_dict[impulse_key][key] = value
-                                            
-                     
+                    
                 else:
                     key = tokens[0].strip()
                     value = tokens[1].strip()
@@ -307,4 +321,5 @@ if __name__ == '__main__':
         writer.writeheader()
         
         writer.writerows(all_dict_list)
+        
         
