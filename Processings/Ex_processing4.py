@@ -22,6 +22,7 @@ def get_columns(input_path):
     impulse_dict = {}
     
     columns = []
+    col_max = 0
     
     with open(input_path, 'r', encoding='UTF-8') as fin:
         for line in fin:
@@ -33,19 +34,6 @@ def get_columns(input_path):
                 
             
             elif 'Test Date' in line:
-                if len(meta_dict.keys()) != 0:
-                    meta_dict_keys = [meta_key.strip() for meta_key in meta_dict.keys()]
-                    meta_dict_keys.remove('')
-                            
-                    for impulse_key, impulse_value in impulse_dict.items():
-                        impulse_dict_keys = []
-                        for impulse_dict_key in impulse_value.keys():
-                            impulse_dict_keys.append(impulse_dict_key.strip())
-                    
-                    column_candidates = meta_dict_keys + ['Trial Number'] + impulse_dict_keys + ['Saccade 1'] + ['Saccade 2'] + ['Saccade 3'] + ['Gain Test'] + ['Overt Test'] + ['Covert Test']
-                    columns.append(column_candidates)
-                    
-                
                 is_catch_up_saccade_analysis = False
                 is_impulse = False
                 
@@ -69,6 +57,22 @@ def get_columns(input_path):
             
             
             elif 'Impulse' in line:
+                if len(impulse_dict.keys()) != 0:
+                    meta_dict_keys = [meta_key.strip() for meta_key in meta_dict.keys()]
+                    meta_dict_keys.remove('')
+                    
+                    for impulse_key, impulse_value in impulse_dict.items():
+                        impulse_dict_keys = []
+                        for impulse_dict_key in impulse_value.keys():
+                            impulse_dict_keys.append(impulse_dict_key.strip())
+                    
+                    column_candidates = meta_dict_keys + ['Trial Number'] + impulse_dict_keys
+                    
+                    if len(column_candidates) > col_max:
+                        columns = []
+                        columns.append(column_candidates)
+                        col_max = len(column_candidates)
+                
                 is_impulse = True
                 is_catch_up_saccade_analysis = False
                     
@@ -127,11 +131,11 @@ def get_columns(input_path):
                     value = tokens[1].strip()
                     
                     meta_dict[key] = value
-
-        for col in columns:
-            return col
+                            
+    for col in columns:
+        return col
             
-        return []
+    return []
     
 
 if __name__ == '__main__': 
@@ -289,29 +293,7 @@ if __name__ == '__main__':
                         value = tokens[2:]
                     
                     impulse_dict[impulse_key][key] = value
-                    
-                    if 'Gain' in line:
-                        if meta_dict['Test Type'] == 'Head Impulse Lateral':
-                            if float(value) >= 0.8 and float(value) <= 1.2:
-                                impulse_dict[impulse_key]['Gain Test'] = 'Normal'
-                                
-                            else:
-                                impulse_dict[impulse_key]['Gain Test'] = 'Abnormal'
-                                
-                        else:
-                            if float(value) >= 0.75 and float(value) <= 1.2:
-                                impulse_dict[impulse_key]['Gain Test'] = 'Normal'
-                                
-                            else:
-                                impulse_dict[impulse_key]['Gain Test'] = 'Abnormal'
-                                
-                    if 'Overt Saccades' in line:
-                        if int(value) >= 1:
-                            overt_cnt = overt_cnt + 1
-                            
-                    if 'Covert Saccades' in line:
-                        if int(value) >= 1:
-                            covert_cnt = covert_cnt + 1
+                                            
                      
                 else:
                     key = tokens[0].strip()
