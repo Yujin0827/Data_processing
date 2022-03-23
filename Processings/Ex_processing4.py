@@ -4,6 +4,7 @@
 
 >>> meta_dict data => left, right로 분리
 >>> Impulse number, Saccade 추가
+>>> 정상, 비정상 분류
 
 '''
 
@@ -41,7 +42,7 @@ def get_columns(input_path):
                         for impulse_dict_key in impulse_value.keys():
                             impulse_dict_keys.append(impulse_dict_key.strip())
                     
-                    column_candidates = meta_dict_keys + ['Trial Number'] + impulse_dict_keys + ['Saccade 1'] + ['Saccade 2'] + ['Saccade 3']
+                    column_candidates = meta_dict_keys + ['Trial Number'] + impulse_dict_keys + ['Saccade 1'] + ['Saccade 2'] + ['Saccade 3'] + ['Gain Test'] + ['Overt Test'] + ['Covert Test']
                     columns.append(column_candidates)
                     
                 
@@ -151,6 +152,9 @@ if __name__ == '__main__':
     impulse_key = ''
     impulse_num = 1
     
+    overt_cnt = 0
+    covert_cnt = 0
+    
     xml_doc = ET.parse(xml_path)
     root = xml_doc.getroot()
     
@@ -193,6 +197,9 @@ if __name__ == '__main__':
                 all_dict = {}
                 impulse_num = 1
                 
+                overt_cnt = 0
+                covert_cnt = 0
+                
                 key = tokens[0].strip()
                 value = tokens[1].strip()
                 
@@ -228,6 +235,9 @@ if __name__ == '__main__':
                 
                 is_impulse = True
                 is_catch_up_saccade_analysis = False
+                
+                overt_cnt = 0
+                covert_cnt = 0
                         
                 impulse_key = tokens[0].strip()
                 value_list_key = tokens[1].strip()
@@ -279,6 +289,29 @@ if __name__ == '__main__':
                         value = tokens[2:]
                     
                     impulse_dict[impulse_key][key] = value
+                    
+                    if 'Gain' in line:
+                        if meta_dict['Test Type'] == 'Head Impulse Lateral':
+                            if float(value) >= 0.8 and float(value) <= 1.2:
+                                impulse_dict[impulse_key]['Gain Test'] = 'Normal'
+                                
+                            else:
+                                impulse_dict[impulse_key]['Gain Test'] = 'Abnormal'
+                                
+                        else:
+                            if float(value) >= 0.75 and float(value) <= 1.2:
+                                impulse_dict[impulse_key]['Gain Test'] = 'Normal'
+                                
+                            else:
+                                impulse_dict[impulse_key]['Gain Test'] = 'Abnormal'
+                                
+                    if 'Overt Saccades' in line:
+                        if int(value) >= 1:
+                            overt_cnt = overt_cnt + 1
+                            
+                    if 'Covert Saccades' in line:
+                        if int(value) >= 1:
+                            covert_cnt = covert_cnt + 1
                      
                 else:
                     key = tokens[0].strip()
