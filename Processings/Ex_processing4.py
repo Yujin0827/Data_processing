@@ -322,4 +322,3 @@ if __name__ == '__main__':
         
         writer.writerows(all_dict_list)
         
-        
