@@ -183,10 +183,10 @@ if __name__ == '__main__':
                     for line in fin:
                         line = line.strip()
                         tokens = line.split(',')
-                
+                        
                         if 'Patient Name:' in line:
                             patient_name = ' '.join(tokens[1:]).strip()
-                
+                            
                         elif 'Test Date' in line:
                             if len(meta_dict) != 0:
                                 for col in columns:
