@@ -17,7 +17,6 @@ if __name__ == '__main__':
     input_path = 'D:/vHIT/ahn ,hyo joon_200555967/ahn _hyo joon_2020_12_24_14_45_43.csv'
     xml_path = 'D:/vHIT/ahn ,hyo joon_200555967/ahn _hyo joon_2020_12_24_14_45_43.xml'
     
-    print(input_path)
     
     is_impulse = False
     
@@ -47,6 +46,7 @@ if __name__ == '__main__':
                 meta_dict[key] = value
                 meta_dict['patient UID'] = patient_uid[0]
                 meta_dict['patient ID'] = patient_id[0]
+            
             
             else:
                 if 'Test Date' in line:

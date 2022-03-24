@@ -19,7 +19,6 @@ if __name__ == '__main__':
     input_path = 'D:/vHIT/ahn ,hyo joon_200555967/ahn _hyo joon_2020_12_24_14_45_43.csv'
     xml_path = 'D:/vHIT/ahn ,hyo joon_200555967/ahn _hyo joon_2020_12_24_14_45_43.xml'
     
-    print(input_path)
     
     is_catch_up_saccade_analysis = False
     is_impulse = False

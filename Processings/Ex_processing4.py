@@ -15,6 +15,7 @@ import xml.etree.ElementTree as ET
 from xml.etree.ElementTree import parse
 import pandas as pd
 
+
 def get_columns(input_path):
     
     is_catch_up_saccade_analysis = False

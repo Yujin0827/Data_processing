@@ -12,7 +12,6 @@ from xml.etree.ElementTree import parse
 
 
 def get_columns(input_path):
-
     is_catch_up_saccade_analysis = False
     is_impulse = False
     
@@ -28,6 +27,7 @@ def get_columns(input_path):
             
             if 'Patient Name:' in line:
                 patient_name = ' '.join(tokens[1:])
+            
             
             elif 'Test Date' in line:
                 if len(meta_dict.keys()) != 0:
@@ -56,11 +56,13 @@ def get_columns(input_path):
                 meta_dict['Patient UID'] = patient_uid
                 meta_dict[key] = value
                 
+                
             elif 'Test Type' in line:
                 key = tokens[0].strip()
                 value = tokens[1].strip()
                 
                 meta_dict[key] = value
+            
             
             elif 'Impulse' in line:
                     is_impulse = True
@@ -72,6 +74,7 @@ def get_columns(input_path):
                     
                     impulse_dict[impulse_key] = {}
                     impulse_dict[impulse_key][value_list_key] = value_list_value
+                    
                     
             else:
                 if 'Catch-up Saccade Analysis' in line:
@@ -126,7 +129,6 @@ if __name__ == '__main__':
     input_path = 'D:/vHIT/ahn ,hyo joon_200555967/ahn _hyo joon_2020_12_24_14_45_43.csv'
     xml_path = 'D:/vHIT/ahn ,hyo joon_200555967/ahn _hyo joon_2020_12_24_14_45_43.xml'
     
-    print(input_path)
     
     is_catch_up_saccade_analysis = False
     is_impulse = False
@@ -159,6 +161,7 @@ if __name__ == '__main__':
             if 'Patient Name:' in line:
                 patient_name = ' '.join(tokens[1:]).strip()
                 
+                
             elif 'Test Date' in line:
                 if len(meta_dict) != 0:
                     for col in columns:
@@ -186,11 +189,13 @@ if __name__ == '__main__':
                 meta_dict['Patient UID'] = patient_uid
                 meta_dict[key] = value
                 
+                
             elif 'Test Type' in line:
                 key = tokens[0].strip()
                 value = tokens[1].strip()
                 
                 meta_dict[key] = value
+            
             
             elif 'Impulse' in line:
                 if len(impulse_dict.keys()) != 0:
@@ -216,6 +221,7 @@ if __name__ == '__main__':
                    
                 impulse_dict[impulse_key] = {}
                 impulse_dict[impulse_key][value_list_key] = value_list_value
+            
             
             else:
                 if 'Catch-up Saccade Analysis' in line:
