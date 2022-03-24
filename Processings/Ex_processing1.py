@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 '''
 
 >>> 환자 1명의 data에 대한 processing
