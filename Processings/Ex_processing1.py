@@ -155,5 +155,4 @@ if __name__ == '__main__':
                 
             print()        
             for key, value in impulse_value.items():
-                print(key, value)
-                
+                print(key, value)      
