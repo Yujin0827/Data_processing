@@ -15,7 +15,7 @@ from xml.etree.ElementTree import parse
 import pandas as pd
 import os
 
-def get_columns(input_path, patient_id, patient_uid):
+def get_columns(input_path, encoding_type):
 
     is_catch_up_saccade_analysis = False
     is_impulse = False
@@ -27,7 +27,7 @@ def get_columns(input_path, patient_id, patient_uid):
     col_max = 0
     
     
-    with open(input_path, 'r', encoding='UTF-8') as fin:
+    with open(input_path, 'r', encoding=encoding_type) as fin:
         for line in fin:
             tokens = line.split(',')
             
@@ -45,10 +45,7 @@ def get_columns(input_path, patient_id, patient_uid):
 
                 key = tokens[0].strip()
                 value = tokens[1].strip()
-
-                meta_dict['Patient Name'] = patient_name
-                meta_dict['Patient ID'] = patient_id
-                meta_dict['Patient UID'] = patient_uid
+                
                 meta_dict[key] = value
 
 
@@ -69,7 +66,7 @@ def get_columns(input_path, patient_id, patient_uid):
                         for impulse_dict_key in impulse_value.keys():
                             impulse_dict_keys.append(impulse_dict_key.strip())
                     
-                    column_candidates = meta_dict_keys + ['Trial Number'] + impulse_dict_keys
+                    column_candidates = ['Patient Name', 'Patient ID', 'Patient UID'] + meta_dict_keys + ['Trial Number'] + impulse_dict_keys
                     
                     if len(column_candidates) > col_max:
                         columns = []
@@ -140,7 +137,7 @@ def get_columns(input_path, patient_id, patient_uid):
 
         return []
 
-def parse_csv(file):
+def parse_csv(file, encoding_type):
     if '.xml' in file:
         xml_path = os.path.join(path, file).replace('\\', '/')
         input_path = xml_path.strip('.xml') + '.csv'
@@ -172,16 +169,14 @@ def parse_csv(file):
         patient_uid = [x.findtext("{http://tempuri.org/PMRExportDataSet.xsd}PatientUID") for x in ics_patient][0]
         patient_name = ""
         
-        columns = get_columns(input_path, patient_id, patient_uid)
+        columns = get_columns(input_path, encoding_type)
         # print("\t".join(columns))
         
         
-        with open(input_path, 'r', encoding='UTF-8') as fin:
+        with open(input_path, 'r', encoding=encoding_type) as fin:
             for line in fin:
                 line = line.strip()
-                
                 tokens = line.split(',')
-                
                 
                 if 'Patient Name:' in line:
                     patient_name = ' '.join(tokens[1:]).strip()
@@ -320,10 +315,11 @@ if __name__ == '__main__':
     for path, dir, files in os.walk(file_path):
         for file in files:
             try:
-                parse_csv(file)
+                parse_csv(file, 'UTF-8')
                 
             except UnicodeDecodeError:
-                print(file)
+                parse_csv(file, 'ISO-8859-1')
+                print(file, "DecodeError")
                 
             except FileNotFoundError:
                 print(file)
