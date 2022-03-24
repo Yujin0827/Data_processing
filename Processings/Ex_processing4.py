@@ -35,7 +35,7 @@ def get_columns(input_path):
             if 'Patient Name:' in line:
                 patient_name = ' '.join(tokens[1:])
                 
-            
+                
             elif 'Test Date' in line:
                 is_catch_up_saccade_analysis = False
                 is_impulse = False
@@ -46,9 +46,6 @@ def get_columns(input_path):
                 key = tokens[0].strip()
                 value = tokens[1].strip()
                 
-                meta_dict['Patient Name'] = patient_name
-                meta_dict['Patient ID'] = patient_id
-                meta_dict['Patient UID'] = patient_uid
                 meta_dict[key] = value
                 
                 
@@ -69,7 +66,7 @@ def get_columns(input_path):
                         for impulse_dict_key in impulse_value.keys():
                             impulse_dict_keys.append(impulse_dict_key.strip())
                     
-                    column_candidates = meta_dict_keys + ['Trial Number'] + impulse_dict_keys
+                    column_candidates = ['Patient Name', 'Patient ID', 'Patient UID'] + meta_dict_keys + ['Trial Number'] + impulse_dict_keys
                     
                     if len(column_candidates) > col_max:
                         columns = []
@@ -155,13 +152,8 @@ def get_columns(input_path):
             
     return []
     
-
-if __name__ == '__main__': 
-    input_path = 'D:/vHIT/ahn ,hyo joon_200555967/ahn _hyo joon_2020_12_24_14_45_43.csv'
-    xml_path = 'D:/vHIT/ahn ,hyo joon_200555967/ahn _hyo joon_2020_12_24_14_45_43.xml'
     
-    print(input_path)
-    
+def parse_csv(input_path, xml_path):
     is_catch_up_saccade_analysis = False
     is_impulse = False
     
@@ -174,8 +166,6 @@ if __name__ == '__main__':
     impulse_key = ''
     impulse_num = 1
     
-    overt_cnt = 0
-    covert_cnt = 0
     
     xml_doc = ET.parse(xml_path)
     root = xml_doc.getroot()
@@ -185,8 +175,10 @@ if __name__ == '__main__':
     patient_uid = [x.findtext("{http://tempuri.org/PMRExportDataSet.xsd}PatientUID") for x in ics_patient][0]
     patient_name = ""
     
+    
     columns = get_columns(input_path)
-    print("\t".join(columns))
+    # print("\t".join(columns))
+    
     
     with open(input_path, 'r', encoding='UTF-8') as fin:
         for line in fin:
@@ -196,19 +188,20 @@ if __name__ == '__main__':
             if 'Patient Name:' in line:
                 patient_name = ' '.join(tokens[1:]).strip()
                 
+                
             elif 'Test Date' in line:
                 if len(meta_dict) != 0:
                     for col in columns:
                         if col in meta_dict:
-                            print(meta_dict[col], end='\t')
+                            # print(meta_dict[col], end='\t')
                             all_dict[col] = meta_dict[col]
                             
                         for impulse_key, impulse_value in impulse_dict.items():
                             for impulse_value_key, impulse_value_value in impulse_value.items():
                                 if col in impulse_value_key:
-                                    print(impulse_value_value, end='\t')
+                                    # print(impulse_value_value, end='\t')
                                     all_dict[col] = impulse_value_value
-                    print()
+                    # print()
                     all_dict_list.append(all_dict)
                 
                 is_catch_up_saccade_analysis = False
@@ -219,9 +212,6 @@ if __name__ == '__main__':
                 all_dict = {}
                 impulse_num = 1
                 
-                overt_cnt = 0
-                covert_cnt = 0
-                
                 key = tokens[0].strip()
                 value = tokens[1].strip()
                 
@@ -230,25 +220,27 @@ if __name__ == '__main__':
                 meta_dict['Patient UID'] = patient_uid
                 meta_dict[key] = value
                 
+                
             elif 'Test Type' in line:
                 key = tokens[0].strip()
                 value = tokens[1].strip()
                 
                 meta_dict[key] = value
                 
+                
             elif 'Impulse' in line:
                 if len(impulse_dict.keys()) != 0:
                     for col in columns:
                         if col in meta_dict:
-                            print(meta_dict[col], end='\t')
+                            # print(meta_dict[col], end='\t')
                             all_dict[col] = meta_dict[col]
                             
                         for impulse_key, impulse_value in impulse_dict.items():
                             for impulse_value_key, impulse_value_value in impulse_value.items():
                                 if col in impulse_value_key:
-                                    print(impulse_value_value, end='\t')
+                                    # print(impulse_value_value, end='\t')
                                     all_dict[col] = impulse_value_value
-                    print()
+                    # print()
                     impulse_num = impulse_num + 1
                     all_dict_list.append(all_dict)
                 
@@ -257,9 +249,6 @@ if __name__ == '__main__':
                 
                 is_impulse = True
                 is_catch_up_saccade_analysis = False
-                
-                overt_cnt = 0
-                covert_cnt = 0
                         
                 impulse_key = tokens[0].strip()
                 value_list_key = tokens[1].strip()
@@ -271,7 +260,8 @@ if __name__ == '__main__':
                 meta_dict['Trial Number'] = str(impulse_num)
                 impulse_dict[impulse_key] = {}
                 impulse_dict[impulse_key][value_list_key] = value_list_value
-            
+                
+                
             else:
                 if 'Catch-up Saccade Analysis' in line:
                     is_catch_up_saccade_analysis = True
@@ -324,4 +314,23 @@ if __name__ == '__main__':
         writer.writeheader()
         
         writer.writerows(all_dict_list)
-        
+    
+    
+def normal_sort(result_path):
+    f = open(result_path, 'r', encoding='UTF-8')
+    reader = csv.DictReader(f)
+    
+    for row in reader:
+        print(row)
+    
+    f.close()
+
+
+if __name__ == '__main__': 
+    input_path = 'D:/vHIT/ahn ,hyo joon_200555967/ahn _hyo joon_2020_12_24_14_45_43.csv'
+    xml_path = 'D:/vHIT/ahn ,hyo joon_200555967/ahn _hyo joon_2020_12_24_14_45_43.xml'
+    
+    parse_csv(input_path, xml_path)
+    result_path = 'D:/vhit/ahn ,hyo joon_200555967/Result_Ex_processing4.tsv'
+    
+    normal_sort(result_path)
