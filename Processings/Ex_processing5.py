@@ -7,6 +7,8 @@
 >>> meta_dict data => left, right로 분리
 >>> Impulse number 추가
 
+>>> refactoring 하기 !
+
 '''
 
 import csv
@@ -288,7 +290,7 @@ def parse_csv(file, encoding_type):
                             
                     elif is_impulse:
                         key = tokens[1].strip()
-        
+                        
                         if len(tokens) == 3:
                             value = tokens[2].strip()
         
