@@ -15,8 +15,10 @@ from xml.etree.ElementTree import parse
 import pandas as pd
 import os
 
-def get_columns(input_path, encoding_type):
+# def parsing(input_path, encoding_type):
 
+
+def get_columns(input_path, encoding_type):
     is_catch_up_saccade_analysis = False
     is_impulse = False
 
@@ -318,7 +320,7 @@ if __name__ == '__main__':
                 parse_csv(file, 'UTF-8')
                 
             except UnicodeDecodeError:
-                parse_csv(file, 'ISO-8859-1')
+                parse_csv(file, 'ANSI')
                 print(file, "DecodeError")
                 
             except FileNotFoundError:
