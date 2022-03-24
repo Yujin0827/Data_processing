@@ -137,9 +137,7 @@ def get_columns(input_path):
         for col in columns:
             return col
 
-        return []
-
-
+        return []
 
 if __name__ == '__main__':
     file_path = 'D:/vHIT/'
