@@ -322,5 +322,8 @@ if __name__ == '__main__':
                 print(file, "DecodeError")
                 
             except FileNotFoundError:
+                print(file, "FileNotFoundError")
+            
+            except:
                 print(file)
                 
