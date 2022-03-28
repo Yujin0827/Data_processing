@@ -7,8 +7,6 @@
 >>> meta_dict data => left, right로 분리
 >>> Impulse number 추가
 
->>> refactoring 하기 !
-
 '''
 
 import csv
@@ -16,8 +14,6 @@ import xml.etree.ElementTree as ET
 from xml.etree.ElementTree import parse
 import pandas as pd
 import os
-
-# def parsing(input_path, encoding_type):
 
 
 def get_columns(input_path, encoding_type):
