@@ -6,7 +6,6 @@
 
 >>> meta_dict data => left, right로 분리
 >>> Impulse number, Saccade 추가
->>> 정상, 비정상 분류
 
 '''
 
@@ -125,21 +124,6 @@ def get_columns(input_path):
                         value = tokens[2:]
                     
                     impulse_dict[impulse_key][key] = value
-                    
-                    if 'Gain' in line:
-                        if meta_dict['Test Type'] == 'Head Impulse Lateral':
-                            if float(value) >= 0.8 and float(value) <= 1.2:
-                                impulse_dict[impulse_key]['Gain Test'] = 'Normal'
-                                
-                            else:
-                                impulse_dict[impulse_key]['Gain Test'] = 'Abnormal'
-                                
-                        else:
-                            if float(value) >= 0.75 and float(value) <= 1.2:
-                                impulse_dict[impulse_key]['Gain Test'] = 'Normal'
-                                
-                            else:
-                                impulse_dict[impulse_key]['Gain Test'] = 'Abnormal'
                     
                 else:
                     key = tokens[0].strip()
@@ -314,16 +298,6 @@ def parse_csv(input_path, xml_path):
         writer.writeheader()
         
         writer.writerows(all_dict_list)
-    
-    
-def normal_sort(result_path):
-    f = open(result_path, 'r', encoding='UTF-8')
-    reader = csv.DictReader(f)
-    
-    for row in reader:
-        print(row)
-    
-    f.close()
 
 
 if __name__ == '__main__': 
@@ -333,4 +307,3 @@ if __name__ == '__main__':
     parse_csv(input_path, xml_path)
     result_path = 'D:/vhit/ahn ,hyo joon_200555967/Result_Ex_processing4.tsv'
     
-    normal_sort(result_path)
