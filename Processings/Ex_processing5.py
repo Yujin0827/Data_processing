@@ -139,7 +139,7 @@ def get_columns(input_path, encoding_type):
         for col in columns:
             return col
 
-        return []
+        return []
 
 def parse_csv(file, encoding_type):
     if '.xml' in file:
@@ -327,3 +327,4 @@ if __name__ == '__main__':
                 
             except FileNotFoundError:
                 print(file)
+                
