@@ -7,12 +7,37 @@
 >>> meta_dict data => left, right로 분리
 >>> Impulse number, Saccade 추가
 
+>>> refactoring
+
 '''
 
 import csv
 import xml.etree.ElementTree as ET
 from xml.etree.ElementTree import parse
 import pandas as pd
+
+def parsing_meta_dict(line, meta_dict, impulse_dict):
+    tokens = line.split(',')
+    
+    if 'Patient Name:' in line:
+        patient_name = ' '.join(tokens[1:])
+                
+                
+    elif 'Test Date' in line:
+        key = tokens[0].strip()
+        value = tokens[1].strip()
+        
+        meta_dict[key] = value
+        
+        
+    elif 'Test Type' in line:
+        key = tokens[0].strip()
+        value = tokens[1].strip()
+        
+        meta_dict[key] = value
+        
+    
+    return meta_dict
 
 
 def get_columns(input_path):
@@ -28,34 +53,19 @@ def get_columns(input_path):
     
     with open(input_path, 'r', encoding='UTF-8') as fin:
         for line in fin:
-            
+            line = line.strip()
             tokens = line.split(',')
             
-            if 'Patient Name:' in line:
-                patient_name = ' '.join(tokens[1:])
-                
-                
-            elif 'Test Date' in line:
+            if 'Test Date' in line:
                 is_catch_up_saccade_analysis = False
                 is_impulse = False
                 
                 meta_dict = {}
                 impulse_dict = {}
-                
-                key = tokens[0].strip()
-                value = tokens[1].strip()
-                
-                meta_dict[key] = value
-                
-                
-            elif 'Test Type' in line:
-                key = tokens[0].strip()
-                value = tokens[1].strip()
-                
-                meta_dict[key] = value
             
+            parsing_meta_dict(line, meta_dict)
             
-            elif 'Impulse' in line:
+            if 'Impulse' in line:
                 if len(impulse_dict.keys()) != 0:
                     meta_dict_keys = [meta_key.strip() for meta_key in meta_dict.keys()]
                     meta_dict_keys.remove('')
@@ -274,7 +284,7 @@ def parse_csv(input_path, xml_path):
                             
                     else:
                         meta_dict[key] = value
-                    
+                        
                 elif is_impulse:
                     key = tokens[1].strip()
                     
@@ -298,7 +308,7 @@ def parse_csv(input_path, xml_path):
         writer.writeheader()
         
         writer.writerows(all_dict_list)
-
+        
 
 if __name__ == '__main__': 
     input_path = 'D:/vHIT/ahn ,hyo joon_200555967/ahn _hyo joon_2020_12_24_14_45_43.csv'
