@@ -30,7 +30,6 @@ def get_columns(input_path, encoding_type):
     with open(input_path, 'r', encoding=encoding_type) as fin:
         for line in fin:
             tokens = line.split(',')
-            
 
             if 'Patient Name:' in line:
                 patient_name = ' '.join(tokens[1:])
@@ -141,7 +140,7 @@ def parse_csv(file, encoding_type):
     if '.xml' in file:
         xml_path = os.path.join(path, file).replace('\\', '/')
         input_path = xml_path.strip('.xml') + '.csv'
-        result_path = path.replace('vHIT', 'vHIT_Result') + '/' + file.strip('.xml') + '.tsv'
+        result_path = path.replace('vHIT', 'vHIT_Parsed') + '/' + file.strip('.xml') + '.tsv'
         result_dir = os.path.dirname(result_path)
         
         if not os.path.exists(result_dir):
