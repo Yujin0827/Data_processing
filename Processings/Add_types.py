@@ -74,12 +74,13 @@ if __name__ == '__main__':
 
     for path, dir, files in os.walk(input_dir):
         for file in files:
+            input_path = os.path.join(path, file).replace('\\', '/')
+            
             try:
-                input_path = os.path.join(path, file).replace('\\', '/')
-                
                 df = get_gain(input_path)
                 df = get_saccade(df)
                 save_result(input_path, df)
+                
             except:
-                print(file)
+                print(input_path)
     
