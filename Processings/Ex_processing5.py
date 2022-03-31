@@ -187,7 +187,7 @@ def parse_csv(file, encoding_type):
                             if col in meta_dict:
                                 # print(meta_dict[col], end='\t')
                                 all_dict[col] = meta_dict[col]
-        
+                    
                             for impulse_key, impulse_value in impulse_dict.items():
                                 for impulse_value_key, impulse_value_value in impulse_value.items():
                                     if col in impulse_value_key:
@@ -226,7 +226,7 @@ def parse_csv(file, encoding_type):
                             if col in meta_dict:
                                 # print(meta_dict[col], end='\t')
                                 all_dict[col] = meta_dict[col]
-        
+                    
                             for impulse_key, impulse_value in impulse_dict.items():
                                 for impulse_value_key, impulse_value_value in impulse_value.items():
                                     if col in impulse_value_key:
@@ -299,7 +299,20 @@ def parse_csv(file, encoding_type):
                         value = tokens[1].strip()
         
                         meta_dict[key] = value
-        
+                    
+            for col in columns:
+                if col in meta_dict:
+                    # print(meta_dict[col], end='\t')
+                    all_dict[col] = meta_dict[col]
+            
+                for impulse_key, impulse_value in impulse_dict.items():
+                    for impulse_value_key, impulse_value_value in impulse_value.items():
+                        if col in impulse_value_key:
+                            # print(impulse_value_value, end='\t')
+                            all_dict[col] = impulse_value_value
+            # print()
+            impulse_num = impulse_num + 1
+            all_dict_list.append(all_dict)
         
         with open(result_path, 'w', encoding='UTF-8', newline='') as f:
             writer = csv.DictWriter(f, fieldnames=columns, delimiter='\t')
