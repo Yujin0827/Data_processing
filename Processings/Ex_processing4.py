@@ -16,28 +16,28 @@ import xml.etree.ElementTree as ET
 from xml.etree.ElementTree import parse
 import pandas as pd
 
-def parsing_meta_dict(line, meta_dict, impulse_dict):
-    tokens = line.split(',')
-    
-    if 'Patient Name:' in line:
-        patient_name = ' '.join(tokens[1:])
-                
-                
-    elif 'Test Date' in line:
-        key = tokens[0].strip()
-        value = tokens[1].strip()
-        
-        meta_dict[key] = value
-        
-        
-    elif 'Test Type' in line:
-        key = tokens[0].strip()
-        value = tokens[1].strip()
-        
-        meta_dict[key] = value
-        
-    
-    return meta_dict
+# def parsing_meta_dict(line, meta_dict, impulse_dict):
+#     tokens = line.split(',')
+#
+#     if 'Patient Name:' in line:
+#         patient_name = ' '.join(tokens[1:])
+#
+#
+#     elif 'Test Date' in line:
+#         key = tokens[0].strip()
+#         value = tokens[1].strip()
+#
+#         meta_dict[key] = value
+#
+#
+#     elif 'Test Type' in line:
+#         key = tokens[0].strip()
+#         value = tokens[1].strip()
+#
+#         meta_dict[key] = value
+#
+#
+#     return meta_dict
 
 
 def get_columns(input_path):
@@ -56,16 +56,31 @@ def get_columns(input_path):
             line = line.strip()
             tokens = line.split(',')
             
-            if 'Test Date' in line:
+            if 'Patient Name:' in line:
+                patient_name = ' '.join(tokens[1:])
+                        
+                        
+            elif 'Test Date' in line:
+                key = tokens[0].strip()
+                value = tokens[1].strip()
+                
+                meta_dict[key] = value
+                
                 is_catch_up_saccade_analysis = False
                 is_impulse = False
                 
                 meta_dict = {}
                 impulse_dict = {}
+                
+                
+            elif 'Test Type' in line:
+                key = tokens[0].strip()
+                value = tokens[1].strip()
+                
+                meta_dict[key] = value
             
-            parsing_meta_dict(line, meta_dict)
             
-            if 'Impulse' in line:
+            elif 'Impulse' in line:
                 if len(impulse_dict.keys()) != 0:
                     meta_dict_keys = [meta_key.strip() for meta_key in meta_dict.keys()]
                     meta_dict_keys.remove('')
@@ -145,6 +160,29 @@ def get_columns(input_path):
         return col
             
     return []
+
+
+def add_all(columns, meta_dict, impulse_dict):
+    all_dict = {}
+    all_dict_list = []
+    
+    for col in columns:
+        if col in meta_dict:
+            # print(meta_dict[col], end='\t')
+            all_dict[col] = meta_dict[col]
+            
+        for impulse_key, impulse_value in impulse_dict.items():
+            for impulse_value_key, impulse_value_value in impulse_value.items():
+                if col in impulse_value_key:
+                    # print(impulse_value_value, end='\t')
+                    all_dict[col] = impulse_value_value
+    # print()
+    
+    all_dict_list.append(all_dict)
+    
+    all_dict = {}
+    
+    return all_dict_list
     
     
 def parse_csv(input_path, xml_path):
@@ -185,11 +223,12 @@ def parse_csv(input_path, xml_path):
                 
             elif 'Test Date' in line:
                 if len(meta_dict) != 0:
+                    # add_all(columns, meta_dict, impulse_dict)
                     for col in columns:
                         if col in meta_dict:
                             # print(meta_dict[col], end='\t')
                             all_dict[col] = meta_dict[col]
-                            
+                    
                         for impulse_key, impulse_value in impulse_dict.items():
                             for impulse_value_key, impulse_value_value in impulse_value.items():
                                 if col in impulse_value_key:
@@ -224,11 +263,12 @@ def parse_csv(input_path, xml_path):
                 
             elif 'Impulse' in line:
                 if len(impulse_dict.keys()) != 0:
+                    # add_all(columns, meta_dict, impulse_dict)
                     for col in columns:
                         if col in meta_dict:
                             # print(meta_dict[col], end='\t')
                             all_dict[col] = meta_dict[col]
-                            
+                    
                         for impulse_key, impulse_value in impulse_dict.items():
                             for impulse_value_key, impulse_value_value in impulse_value.items():
                                 if col in impulse_value_key:
@@ -302,6 +342,19 @@ def parse_csv(input_path, xml_path):
                     
                     meta_dict[key] = value
                     
+        # add_all(columns, meta_dict, impulse_dict)
+        for col in columns:
+            if col in meta_dict:
+                # print(meta_dict[col], end='\t')
+                all_dict[col] = meta_dict[col]
+        
+            for impulse_key, impulse_value in impulse_dict.items():
+                for impulse_value_key, impulse_value_value in impulse_value.items():
+                    if col in impulse_value_key:
+                        # print(impulse_value_value, end='\t')
+                        all_dict[col] = impulse_value_value
+        # print()
+        all_dict_list.append(all_dict)
                     
     with open('D:/vhit/ahn ,hyo joon_200555967/Result_Ex_processing4.tsv', 'w', encoding='UTF-8', newline='') as f:
         writer = csv.DictWriter(f, fieldnames=columns, delimiter='\t')
